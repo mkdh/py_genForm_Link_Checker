@@ -4,14 +4,21 @@ from datetime import datetime
 # Returns a datetime object containing the local date and time
 global_dateTimeObj = datetime.now()
 global_timestamp = str(global_dateTimeObj.year) + str(global_dateTimeObj.month).zfill(2) + str(global_dateTimeObj.day).zfill(2) + str(global_dateTimeObj.hour).zfill(2) + str(global_dateTimeObj.minute).zfill(2) + str(global_dateTimeObj.second).zfill(2)# + str(global_dateTimeObj.microsecond)
-    
 
-#'D:/WEI_LUN/my_project/python/project_find_bug_report/'
-folderPath = '' # 'C:/Users/10037216/AppData/Local/Programs/Python/Python38-32/my_project/project_find_bug_report/'
-docFile = '機房監控事件通報-網頁失效通報.docx'
-docFile = folderPath + docFile
+# --- Load file
+import os
+def get_file_by_type(my_type, my_folder = 'my_data'):
+    for file in os.listdir(my_folder):
+        if file.endswith("." + my_type):
+            return os.path.join(my_folder, file)
 
-document = docx.Document(docFile) #读入文件
+    return ""
+
+def get_docx():
+    return get_file_by_type("docx")
+
+document = docx.Document(get_docx()) #load file
+# --- end load
 
 tables = document.tables #获取文件中的表格集
 
@@ -52,13 +59,13 @@ def findValue(table, keyword):
 i = 0
 
 for myTable in document.tables:  
-    newDoc = docx.Document(folderPath + 'bugReportSample.docx')
+    newDoc = docx.Document(get_file_by_type('docx', 'my_sys'))
     i = i + 1
     createNewWord(global_timestamp + "_" + str(i) + "_" + findValue(myTable, '主網站名稱') + ".docx",myTable)
 
 
 	
-
+# reference:
 # image https://stackoverflow.com/questions/27691678/finding-image-present-docx-file-using-python?noredirect=1&lq=1
 # https://gifguide2code.com/2017/12/11/python-how-to-deal-with-tables-in-word/
 
